@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Break</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        h1 { color: #d9534f; }
+        #timer { font-size: 2em; margin: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Stop Doomscrolling 🚀</h1>
+    <p>Short-form content can be addictive and harmful. Take a mindful break instead.</p>
+
+    <h2>Mindfulness Timer</h2>
+    <p id="timer">00:00</p>
+    <button onclick="startTimer(60)">1 Min</button>
+    <button onclick="startTimer(300)">5 Min</button>
+    <button onclick="startTimer(900)">15 Min</button>
+
+    <h3>Want to watch something productive instead?</h3>
+    <button onclick="redirectToYouTube()">Go to YouTube</button>
+
+    <script>
+        let timer;
+        
+        function startTimer(seconds) {
+            clearInterval(timer);
+            let timeLeft = seconds;
+            updateTimerDisplay(timeLeft);
+
+            timer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    alert("Time's up! Stay mindful. 😊");
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            let minutes = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            document.getElementById("timer").textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function redirectToYouTube() {
+            window.location.href = "https://www.youtube.com/";
+        }
+    </script>
+
+</body>
+</html>
