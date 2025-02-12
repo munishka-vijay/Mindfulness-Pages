@@ -3,56 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mindful Break</title>
+    <title>Mindfulness Page</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        h1 { color: #d9534f; }
-        #timer { font-size: 2em; margin: 20px; }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .timer-options {
+            margin: 20px;
+        }
+        .slider {
+            width: 200px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #444;
+            color: white;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #666;
+        }
     </style>
 </head>
 <body>
-
-    <h1>Stop Doomscrolling 🚀</h1>
-    <p>Short-form content can be addictive and harmful. Take a mindful break instead.</p>
-
-    <h2>Mindfulness Timer</h2>
-    <p id="timer">00:00</p>
-    <button onclick="startTimer(60)">1 Min</button>
-    <button onclick="startTimer(300)">5 Min</button>
-    <button onclick="startTimer(900)">15 Min</button>
-
-    <h3>Want to watch something productive instead?</h3>
-    <button onclick="redirectToYouTube()">Go to YouTube</button>
+    <div class="container">
+        <h1>Take a Mindfulness Break</h1>
+        <p>Short-form content can be addictive. Take a mindful pause and regain control over your focus.</p>
+        
+        <h2>Set a Timer</h2>
+        <input type="range" min="1" max="60" value="30" class="slider" id="timeSlider">
+        <p id="selectedTime">Selected Time: 30 seconds</p>
+        
+        <div class="timer-options">
+            <button class="btn" onclick="startTimer(5 * 60)">5 Min</button>
+            <button class="btn" onclick="startTimer(10 * 60)">10 Min</button>
+        </div>
+        
+        <h2>Choose Theme</h2>
+        <button class="btn" onclick="changeTheme('skyblue')">Sky Blue</button>
+        <button class="btn" onclick="changeTheme('lavender')">Lavender</button>
+        <button class="btn" onclick="changeTheme('white')">White</button>
+        
+        <h3 id="countdown"></h3>
+        
+        <button class="btn" onclick="window.location.href='https://www.youtube.com/'">Go to YouTube</button>
+    </div>
 
     <script>
-        let timer;
-        
-        function startTimer(seconds) {
-            clearInterval(timer);
-            let timeLeft = seconds;
-            updateTimerDisplay(timeLeft);
+        const slider = document.getElementById('timeSlider');
+        const selectedTime = document.getElementById('selectedTime');
+        let countdownElement = document.getElementById('countdown');
+        let countdown;
 
-            timer = setInterval(() => {
+        slider.oninput = function() {
+            selectedTime.innerText = `Selected Time: ${this.value} seconds`;
+        }
+
+        function startTimer(seconds) {
+            clearInterval(countdown);
+            let timeLeft = seconds;
+            countdownElement.innerText = `Time Remaining: ${timeLeft} sec`;
+            countdown = setInterval(() => {
                 timeLeft--;
-                updateTimerDisplay(timeLeft);
+                countdownElement.innerText = `Time Remaining: ${timeLeft} sec`;
                 if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    alert("Time's up! Stay mindful. 😊");
+                    clearInterval(countdown);
+                    countdownElement.innerText = "Time's up! Stay mindful.";
                 }
             }, 1000);
         }
 
-        function updateTimerDisplay(seconds) {
-            let minutes = Math.floor(seconds / 60);
-            let secs = seconds % 60;
-            document.getElementById("timer").textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        function redirectToYouTube() {
-            window.location.href = "https://www.youtube.com/";
+        function changeTheme(color) {
+            document.body.style.backgroundColor = color;
         }
     </script>
-
 </body>
 </html>
