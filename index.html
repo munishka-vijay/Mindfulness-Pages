@@ -8,51 +8,74 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .container {
             margin-top: 50px;
-        }
-        .timer-options {
-            margin: 20px;
         }
         .slider {
             width: 200px;
         }
         .btn {
-            padding: 10px 20px;
+            padding: 10px 15px;
             margin: 5px;
             border: none;
             cursor: pointer;
             font-size: 16px;
-            background-color: #444;
+            background-color: #007BFF;
             color: white;
             border-radius: 5px;
         }
         .btn:hover {
-            background-color: #666;
+            background-color: #0056b3;
         }
+        .theme-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .theme-dropdown {
+            padding: 8px;
+            font-size: 14px;
+            border: none;
+            background: lightgrey;
+            color: black;
+            cursor: pointer;
+            border-radius: 5px;
+            appearance: none; /* Removes default browser styling */
+        }
+
+        .theme-dropdown:hover,
+        .theme-dropdown:focus {
+            background: lightgrey;
+            color: black;
+        }
+
     </style>
 </head>
 <body>
+    <div class="theme-selector">
+        <select id="themeSelect" class="btn theme-dropdown" style="width: auto;" onchange="changeTheme(this.value)">
+            <option value="0">Change Theme</option>
+            <option value="1">Sky Blue</option>
+            <option value="2">Lavender</option>
+            <option value="3">White</option>
+            <option value="4">Dark Blue Theme</option>
+            <option value="5">Dark Theme</option>
+        </select>
+    </div>
+
     <div class="container">
         <h1>Take a Mindfulness Break</h1>
         <p>Short-form content can be addictive. Take a mindful pause and regain control over your focus.</p>
         
         <h2>Set a Timer</h2>
-        <input type="range" min="1" max="60" value="30" class="slider" id="timeSlider">
-        <p id="selectedTime">Selected Time: 30 seconds</p>
+        <input type="range" min="10" max="300" value="60" class="slider" id="timeSlider">
+        <p id="selectedTime">Selected Time: 60 seconds</p>
         
-        <div class="timer-options">
-            <button class="btn" onclick="startTimer(5 * 60)">5 Min</button>
-            <button class="btn" onclick="startTimer(10 * 60)">10 Min</button>
-        </div>
-        
-        <h2>Choose Theme</h2>
-        <button class="btn" onclick="changeTheme('skyblue')">Sky Blue</button>
-        <button class="btn" onclick="changeTheme('lavender')">Lavender</button>
-        <button class="btn" onclick="changeTheme('white')">White</button>
-        
+        <button class="btn" onclick="startTimer()">Start Timer</button>
+        <button class="btn" onclick="pauseTimer()">Pause Timer</button>
+        <button class="btn" onclick="resetTimer()">Reset Timer</button>
         <h3 id="countdown"></h3>
         
         <button class="btn" onclick="window.location.href='https://www.youtube.com/'">Go to YouTube</button>
@@ -62,28 +85,55 @@
         const slider = document.getElementById('timeSlider');
         const selectedTime = document.getElementById('selectedTime');
         let countdownElement = document.getElementById('countdown');
-        let countdown;
+        let countdown, timeLeft, isPaused = false;
+        
+        const themes = [
+            { background: '#d0ebff', color: 'black' }, // Lighter Light Sky Blue
+            { background: '#c8a2c8', color: 'black' }, // Lighter Lavender
+            { background: 'white', color: 'black' },   // White
+            { background: '#2c3e50', color: 'white' }, // Dark Theme
+            { background: '#1e1e1e', color: '#dcdcdc' } // Deep Dark Theme
+        ];
 
         slider.oninput = function() {
             selectedTime.innerText = `Selected Time: ${this.value} seconds`;
         }
 
-        function startTimer(seconds) {
+        function startTimer() {
             clearInterval(countdown);
-            let timeLeft = seconds;
+            if (!isPaused) {
+                timeLeft = slider.value;
+            }
             countdownElement.innerText = `Time Remaining: ${timeLeft} sec`;
             countdown = setInterval(() => {
-                timeLeft--;
-                countdownElement.innerText = `Time Remaining: ${timeLeft} sec`;
-                if (timeLeft <= 0) {
-                    clearInterval(countdown);
-                    countdownElement.innerText = "Time's up! Stay mindful.";
+                if (!isPaused) {
+                    timeLeft--;
+                    countdownElement.innerText = `Time Remaining: ${timeLeft} sec`;
+                    if (timeLeft <= 0) {
+                        clearInterval(countdown);
+                        countdownElement.innerText = "Time's up! Stay mindful.";
+                    }
                 }
             }, 1000);
+            isPaused = false;
         }
 
-        function changeTheme(color) {
-            document.body.style.backgroundColor = color;
+        function pauseTimer() {
+            isPaused = true;
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            timeLeft = slider.value;
+            countdownElement.innerText = "";
+            isPaused = false;
+        }
+
+        function changeTheme(index) {
+            if (index > 0) {
+                document.body.style.backgroundColor = themes[index - 1].background;
+                document.body.style.color = themes[index - 1].color;
+            }
         }
     </script>
 </body>
